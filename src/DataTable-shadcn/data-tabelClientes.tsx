@@ -66,12 +66,12 @@ export function DataTable<TData, TValue>({
     <div className="rounded-md w-full border">
       <div className="flex items-center justify-between p-4">
         <Input
-          placeholder="Filter User..."
+          placeholder="Filtro pelo Nome..."
           value={
-            (table.getColumn("client_user")?.getFilterValue() as string) || ""
+            (table.getColumn("fullName")?.getFilterValue() as string) || ""
           }
           onChange={(event) =>
-            table.getColumn("client_user")?.setFilterValue(event.target.value)
+            table.getColumn("fullName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

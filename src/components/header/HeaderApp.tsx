@@ -3,6 +3,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import LogoApp from "@/assets/logoApp.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useClients } from "../clients/ClientsContext"; // apagar depois de testar
 import Logout from "@/components/logout/Logout";
 import { useAccount } from "@/components/account/AccountContext";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ import { useLanguage } from "../language/LanguageContext";
 
 export default function HeaderApp() {
   const account = useAccount();
+  const {updateClients} = useClients() // apagar depois de testar
 
   const { updateAccount } = useAccount();
   const navigate = useNavigate();
@@ -27,6 +29,17 @@ export default function HeaderApp() {
     navigate("/admin/instrutores");
   };
   const handleClientViewClick = () => {
+    const fictitiousClient = {
+      id: 1, // Pode gerar um ID único aqui
+      fullName: 'João Souza',
+      cpf: '123.456.789-00',
+      email: "sou joao@gmail.com",
+      sexo: 'Feminino',
+      telefone: '(00) 9876-5432',
+      cep: '54321-678',
+    };
+
+    updateClients(fictitiousClient);
     navigate("/admin/clients");
   };
 
@@ -71,6 +84,15 @@ export default function HeaderApp() {
           </Button>
           <Button variant="ghost" onClick={handleAvaliacoesViewClick}>
             Avaliações Físicas
+          </Button>
+          <Button variant="ghost" >
+            Máquinas
+          </Button>
+          <Button variant="ghost" >
+            Filiais
+          </Button>
+          <Button variant="ghost" >
+            Conta
           </Button>
 
           <Logout />

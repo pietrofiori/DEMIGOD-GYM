@@ -7,7 +7,8 @@ export default function ClientsPage() {
   const columnsclients = columnsClients; // Certifique-se de que ColumnsActions esteja correto
   const { clients } = useClients();
   return (
-    <div className="px-2 flex flex-col gap-4 justify-center mx-[250px]">
+    // fazer o fetch na api para consultar os clientes
+    <div className="px-2 flex flex-col gap-4 justify-center sm:mx-[5px] md:mx-[100px] lg:mx-[150px]">
       <ScrollArea className="h-[500px]">
         <DataTable columns={columnsclients} data={clients} />
       </ScrollArea>

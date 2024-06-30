@@ -42,86 +42,89 @@ import {
 
 import { useToast } from "@/components/ui/use-toast";
 import React, { useEffect, useState, ChangeEvent } from "react";
-import { Loader2 } from "lucide-react";
-interface User {
-  id: string;
-  name: string;
-  guid: string;
+import { Loader2, Pencil } from "lucide-react";
+import { ClientsInterface } from "./ClientsContext";
+interface ClientProps {
+  client?: ClientsInterface;
+  isUpdate?: boolean;
 }
 
-export default function CardCreateClient() {
-  const [nameSensor, setNameSensor] = useState("");
-  const [nameButton, setNameButton] = useState("");
-  const [typeMeasure, setTypeMeasure] = useState("");
-  const [maxValue, setMaxValue] = useState("");
-  const [minValue, setMinValue] = useState("");
-
-  const [geralThreshold, setGeralThreshold] = useState(" ");
+export default function CardCreateClient({
+  client,
+  isUpdate = false,
+}: ClientProps) {
+  const [nameClient, setNameClient] = useState(client?.fullName || "");
+  const [cpfClient, setCpfClient] = useState(client?.cpf || "");
+  const [emailClient, setEmailClient] = useState(client?.email || "");
+  const [genderClient, setGenderClient] = useState(client?.sexo || "");
+  const [phoneClient, setPhoneClient] = useState(client?.telefone || "");
+  const [cepClient, setCepClient] = useState(client?.cep || "");
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
 
-  const handleNameSensor = (value: string) => {
-    setNameSensor(value);
+  const handleNameClient = (event: ChangeEvent<HTMLInputElement>) => {
+    setNameClient(event.target.value);
   };
 
-  const handleNameButton = (event: ChangeEvent<HTMLInputElement>) => {
-    setNameButton(event.target.value);
+  const handleCpfClient = (event: ChangeEvent<HTMLInputElement>) => {
+    setCpfClient(event.target.value);
   };
-  const handleTypeMeasure = (value: string) => {
-    setTypeMeasure(value);
+  const handleEmailClient = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmailClient(event.target.value);
   };
-  const handleMaxValue = (event: ChangeEvent<HTMLInputElement>) => {
-    setGeralThreshold("");
-    setMaxValue(event.target.value);
+  const handleGenderClient = (value: string) => {
+    setGenderClient(value);
   };
-  const handleMinValue = (event: ChangeEvent<HTMLInputElement>) => {
-    setGeralThreshold("");
-    setMinValue(event.target.value);
+  const handlePhoneClient = (event: ChangeEvent<HTMLInputElement>) => {
+    setPhoneClient(event.target.value);
   };
 
-  const handleGeralThreshold = (value: string) => {
-    setGeralThreshold(value);
+  const handleCepClient = (event: ChangeEvent<HTMLInputElement>) => {
+    setCepClient(event.target.value);
   };
 
-  const handleCreateButton = () => {
-    // try {
-    //   if (nameButton && typeMeasure) {
-    //     if (showMinMaxFields && (!maxValue || !minValue)) {
-    //       toast({
-    //         variant: "destructive",
-    //         description:
-    //           "Por favor, preencha os valores mínimo e máximo antes de criar o sensor.",
-    //       });
-    //       return;
-    //     }
-    //     setIsCreating(true);
-    //     const message = {
-    //       api: "admin",
-    //       mt: isUpdate ? "UpdateSensorButton" : "InsertSensorButton",
-    //       ...(isUpdate && { id: existingButton?.id }),
-    //       name: nameButton,
-    //       value: nameSensor,
-    //       guid: selectedUser?.guid,
-    //       type: "sensor",
-    //       min: geralThreshold ? geralThreshold : minValue,
-    //       max: geralThreshold ? geralThreshold : maxValue,
-    //       sensorType: typeMeasure,
-    //       page: selectedPage,
-    //       x: clickedPosition?.j,
-    //       y: clickedPosition?.i,
-    //     };
-    //     wss?.sendMessage(message);
-    //     setIsCreating(false);
-    //   } else {
-    //     toast({
-    //       variant: "destructive",
-    //       description:
-    //         "Por favor, preencha todos os campos antes de criar o sensor.",
-    //     });
-    //   }
-    // } catch (e) {
-    //   console.error(e);
-    // }
+  const unMask = (value: any) => {
+    return value.replace(/[^0-9]/g, "");
+  };
+
+  const handleCreateClient = async () => {
+    if (isUpdate) {
+      // fetch para atualizar os dados com method PUT
+    } else {
+      try {
+        setIsCreating(true);
+        const response = await fetch("/api/AddClient (colocar aqui dps) ", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Colocar o Token aqui": "Token aqui",
+          },
+          body: JSON.stringify({
+            name: nameClient,
+            cpf: unMask(cpfClient),
+            email: emailClient,
+            gender: genderClient,
+            phone: unMask(phoneClient),
+            cep: cepClient,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro ao cadastrar cliente");
+        }
+
+        toast({
+          description: "Cliente cadastrado com sucesso",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          description: "Ocorreu um erro ao cadastrar o cliente",
+        });
+      } finally {
+        setIsCreating(false);
+      }
+    }
   };
 
   const handleDeleteButton = () => {
@@ -133,82 +136,104 @@ export default function CardCreateClient() {
     //   });
     // } catch (e) {
     //   console.error(e);
-    }
-  
-
-  // const typesWithoutMinMax = ["leak", "light", "pir", "tvoc", "magnet_status"];
-  // const typesWithSelectOnly = ["magnet_status", "leak", "pir"];
-
-  // const showMinMaxFields = !typesWithoutMinMax.includes(typeMeasure);
-  // const showSelectOnly = typesWithSelectOnly.includes(typeMeasure);
+  };
 
   return (
     <>
-        <CardHeader>
-          <CardTitle>Atualizar Botão</CardTitle>
-          <CardDescription>descrição</CardDescription>
-        </CardHeader>
-
+      <CardHeader>
+        <CardTitle>
+          {isUpdate ? "Atualizar dados do aluno" : "Cadastrar Aluno"}
+        </CardTitle>
+        <CardDescription>
+          Insira os dados abaixo para {isUpdate ? "atualizar" : "cadastrar"} um
+          novo aluno
+        </CardDescription>
+      </CardHeader>
       <CardContent className="grid gap-4 py-4">
         <div className="grid grid-cols-4 items-center gap-4">
           <Label className="text-end" htmlFor="buttonName">
-            Selecione o Sensor
-          </Label>
-          <Select value={nameSensor} onValueChange={handleNameSensor}>
-            <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Selecione um Sensor" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Sensores</SelectLabel>
-                {/* {sensors.map((sensor) => (
-                  <SelectItem
-                    key={sensor.sensor_name}
-                    value={sensor.sensor_name}
-                  >
-                    {sensor.sensor_name}
-                  </SelectItem>
-                ))} */}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label className="text-end" htmlFor="buttonName">
-            Nome do botão
+            Nome do Aluno
           </Label>
           <Input
             className="col-span-3"
             id="buttonName"
-            placeholder="Nome do botão"
-            value={nameButton}
-            onChange={handleNameButton}
+            placeholder="Nome do Aluno"
+            value={nameClient}
+            onChange={handleNameClient}
             required
           />
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label className="text-end" htmlFor="framework" id="typeMeasure">
-            Tipo de medida
+          <Label className="text-end" htmlFor="buttonName">
+            CPF
           </Label>
-          <Select value={typeMeasure} onValueChange={handleTypeMeasure}>
-            <SelectTrigger className="col-span-3" id="SelectTypeMeasure">
-              <SelectValue placeholder="Selecione o tipo de medida" />
+          <Input
+            className="col-span-3"
+            id="buttonName"
+            placeholder="CPF do Aluno"
+            value={cpfClient}
+            onChange={handleCpfClient}
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonName">
+            E-mail
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonName"
+            placeholder="E-mail do Aluno"
+            value={emailClient}
+            onChange={handleEmailClient}
+            required
+            type="email"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="framework" id="typeGender">
+            Gênero
+          </Label>
+          <Select value={genderClient} onValueChange={handleGenderClient}>
+            <SelectTrigger className="col-span-3" id="selectTypeGender">
+              <SelectValue placeholder="Selecione o Gênero " />
             </SelectTrigger>
             <SelectContent position="popper">
-              <SelectItem value="co2">CO²</SelectItem>
-              <SelectItem value="battery">Bateria</SelectItem>
-              <SelectItem value="humidity">Umidade do ar</SelectItem>
-              <SelectItem value="leak">Alagamento</SelectItem>
-              <SelectItem value="temperature">Temperatura</SelectItem>
-              <SelectItem value="light">Iluminação</SelectItem>
-              <SelectItem value="pir">Presença (V/F)</SelectItem>
-              <SelectItem value="pressure">Pressão</SelectItem>
-              <SelectItem value="tvoc">Compostos Orgânicos Voláteis</SelectItem>
-              <SelectItem value="magnet_status">Aberto/Fechado</SelectItem>
+              <SelectItem value="masculino">Masculino</SelectItem>
+              <SelectItem value="feminino">Feminino</SelectItem>
             </SelectContent>
           </Select>
         </div>
-
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonName">
+            Telefone
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonName"
+            placeholder="(51) X-XXXXXXXX"
+            pattern="\d{11}"
+            value={phoneClient}
+            onChange={handlePhoneClient}
+            required
+            type="tel"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonName">
+            CEP
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonName"
+            placeholder="(51) X-XXXXXXXX"
+            pattern="\d{11}"
+            value={cepClient}
+            onChange={handleCepClient}
+            required
+            type="number"
+          />
+        </div>
       </CardContent>
       <CardFooter className="flex justify-between">
         {/* {isUpdate && (
@@ -233,19 +258,18 @@ export default function CardCreateClient() {
             </AlertDialog>
           </Button>
         )} */}
-        {/* {!isCreating && (
-          <Button onClick={handleCreateButton}>
-            {isUpdate ? "Atualizar" : "Criar"} Sensor
+        {!isCreating && (
+          <Button onClick={handleCreateClient} variant="blue">
+            {isUpdate ? "Atualizar Cadastro" : "Cadastrar"}
           </Button>
-        )} */}
+        )}
         {isCreating && (
-          <Button disabled>
+          <Button disabled variant="blue">
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {/* {isUpdate ? "Atualizar" : "Criar"} Sensor */}
+            {isUpdate ? "Atualizar Cadastro" : "Cadastrar"}
           </Button>
         )}
       </CardFooter>
     </>
   );
 }
-
