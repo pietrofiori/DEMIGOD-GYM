@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, ChangeEvent, useContext } from "react";
-import CardCreateAction from "@/components/actions/CardCreateAction";
+
 import {
   ColumnDef,
   flexRender,
@@ -12,6 +12,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import {
   Table,
@@ -21,7 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import CardCreateInstrutor from "@/components/instrutores/CardCreateInstrutor";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -62,16 +65,29 @@ export function DataTable<TData, TValue>({
     <div className="rounded-md w-full border">
       <div className="flex items-center justify-between p-4">
         <Input
-          placeholder="Filter User..."
+          placeholder="Filtro pelo Nome..."
           value={
-            (table.getColumn("action_user")?.getFilterValue() as string) || ""
+            (table.getColumn("nom")?.getFilterValue() as string) || ""
           }
           onChange={(event) =>
-            table.getColumn("action_user")?.setFilterValue(event.target.value)
+            table.getColumn("fullName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <CardCreateAction />
+        <div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div>
+                <Button variant="blue">Cadastrar Instrutor</Button>
+              </div>
+            </DialogTrigger>
+            <div>
+              <DialogContent>
+                <CardCreateInstrutor />
+              </DialogContent>
+            </div>
+          </Dialog>
+        </div>
       </div>
       <Table>
         <TableHeader>
@@ -163,7 +179,7 @@ export function DataTable<TData, TValue>({
                     </div>
                   </div>
                 )}
-                <h1 className="m-4">No Result</h1>
+                <h1 className="m-4">Sem Resultados</h1>
               </TableCell>
             </TableRow>
           )}

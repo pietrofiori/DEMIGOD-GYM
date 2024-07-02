@@ -7,25 +7,46 @@ import { useClients } from "../clients/ClientsContext"; // apagar depois de test
 import Logout from "@/components/logout/Logout";
 import { useAccount } from "@/components/account/AccountContext";
 import { useNavigate } from "react-router-dom";
-
+import { useInstrutores } from "../instrutores/InstrutoresContext";
 import { LanguageToggle } from "@/components/language/LanguageToggle";
 import texts from "../../_data/texts.json";
 import { useLanguage } from "../language/LanguageContext";
+import { usePlanos } from "../planos/PlanosContext";
+import { useModalidades } from "../modalidades/ModalidadesContext";
 
 export default function HeaderApp() {
   const account = useAccount();
   const {updateClients} = useClients() // apagar depois de testar
-
-  const { updateAccount } = useAccount();
+  const {updateInstrutores} = useInstrutores() // apagar depois de testar
+  const {updatePlanos} = usePlanos()
+  const {updateModalidades} = useModalidades()
   const navigate = useNavigate();
 
   const { language } = useLanguage();
 
   const handlePlanosViewClick = () => {
+    const fictitiousPlano = {
+      id: 1, // Pode gerar um ID único aqui
+      nome: 'Mensal',
+      preco: '120',
+    };
+
+    updatePlanos(fictitiousPlano);
     navigate("/admin/planos");
   };
 
   const handleInstrutoresViewClick = () => {
+    const fictitiousInstrutor = {
+      id: 1, // Pode gerar um ID único aqui
+      fullName: 'Cuca Beludo',
+      cpf: '123.456.999-00',
+      email: "sou cucabeludo@gmail.com",
+      sexo: 'Masculino',
+      telefone: '(00) 9876-5432',
+      cep: '54321-678',
+    };
+
+    updateInstrutores(fictitiousInstrutor);
     navigate("/admin/instrutores");
   };
   const handleClientViewClick = () => {
@@ -44,6 +65,13 @@ export default function HeaderApp() {
   };
 
   const handleModalidadesViewClick = () => {
+    const fictitiousModalidade= {
+      id: 1, // Pode gerar um ID único aqui
+      nome: 'Pilates',
+      preco: '150',
+    };
+
+    updateModalidades(fictitiousModalidade);
     navigate("/admin/modalidades");
   };
   const handleAvaliacoesViewClick = () => {

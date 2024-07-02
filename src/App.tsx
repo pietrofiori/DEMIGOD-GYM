@@ -12,16 +12,20 @@ import NoPage from "./pages/NoPage";
 import { ClientProvider } from "./components/clients/ClientsContext";
 import LanguageProvider from "./components/language/LanguageContext";
 import { ThemeProvider } from "./components/theme-provider";
+import { InstrutorProvider } from "./components/instrutores/InstrutoresContext";
+import { PlanoProvider } from "./components/planos/PlanosContext";
+import { ModalidadeProvider } from "./components/modalidades/ModalidadesContext";
 
 
 function App() {
-
   return (
-    
     <ThemeProvider>
       <LanguageProvider>
-        <ClientProvider>
-          <AccountProvider>
+        <ModalidadeProvider>
+        <PlanoProvider>
+          <InstrutorProvider>
+            <ClientProvider>
+              <AccountProvider>
                 <Routes>
                   {/* <Route path="/" element={<RootRoute />} /> */}
                   <Route path="/login" element={<LoginPage />} />
@@ -29,8 +33,11 @@ function App() {
                   {/* <Route path="/user/*" element={<UserRoute />} /> */}
                   <Route path="*" element={<NoPage />} />
                 </Routes>
-          </AccountProvider>
-        </ClientProvider>
+              </AccountProvider>
+            </ClientProvider>
+          </InstrutorProvider>
+        </PlanoProvider>
+        </ModalidadeProvider>
       </LanguageProvider>
     </ThemeProvider>
   );

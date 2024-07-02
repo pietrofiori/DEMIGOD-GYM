@@ -34,11 +34,11 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { ClientsInterface } from "./ClientsContext";
 
-interface DeleteActionsProps {
+interface DeleteClientProps {
   id: number;
 }
 
-export default function DeleteClient({ id }: DeleteActionsProps) {
+export default function DeleteClient({ id }: DeleteClientProps) {
   const handleDeleteClient = async () => {
     try {
       const response = await fetch("/api/DeleteClient (colocar aqui dps) ", {
@@ -82,7 +82,7 @@ export default function DeleteClient({ id }: DeleteActionsProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Voce tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>
-              Ao apertar em confirmar este usuário será deletado
+              Ao apertar em confirmar este aluno será deletado
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -4,11 +4,13 @@ import DeleteClient from "@/components/clients/DeleteClient";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Pencil, Trash2 } from "lucide-react";
-import { ClientsInterface } from "@/components/clients/ClientsContext";
+import { InstrutoresInterface } from "@/components/instrutores/InstrutoresContext";
 import CardCreateClient from "@/components/clients/CardCreateClient";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-// criar contexto de clients
-export const columnsClients: ColumnDef<ClientsInterface>[] = [
+import DeleteInstrutor from "@/components/instrutores/DeleteInstrutor";
+import CardCreateInstrutor from "@/components/instrutores/CardCreateInstrutor";
+// criar contexto de Instrutor
+export const columnsInstrutor: ColumnDef<InstrutoresInterface>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -59,10 +61,10 @@ export const columnsClients: ColumnDef<ClientsInterface>[] = [
     header: "CEP",
   },
   {
-    id: "clients",
+    id: "instrutor",
     header: "Opções",
     cell: ({ row }) => {
-      const clients = row.original;
+      const instrutor = row.original;
 
       return (
         <div className="flex justify-center gap-1 items-center">
@@ -72,11 +74,11 @@ export const columnsClients: ColumnDef<ClientsInterface>[] = [
               <Pencil />
             </DialogTrigger>
             <DialogContent>
-              <CardCreateClient client={clients} isUpdate={true} />
+              <CardCreateInstrutor instrutor={instrutor} isUpdate={true} />
             </DialogContent>
           </Dialog>
           {/* DELETAR*/}
-          <DeleteClient id={clients.id} />
+            <DeleteInstrutor id={instrutor.id}/>
         </div>
       );
     },
