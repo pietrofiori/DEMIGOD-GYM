@@ -50,17 +50,17 @@ export default function HeaderApp() {
     navigate("/admin/instrutores");
   };
   const handleClientViewClick = () => {
-    const fictitiousClient = {
-      id: 1, // Pode gerar um ID único aqui
-      fullName: 'João Souza',
-      cpf: '123.456.789-00',
-      email: "sou joao@gmail.com",
-      sexo: 'Feminino',
-      telefone: '(00) 9876-5432',
-      cep: '54321-678',
-    };
+    // const fictitiousClient = {
+    //   id: 1, // Pode gerar um ID único aqui
+    //   fullName: 'João Souza',
+    //   cpf: '123.456.789-00',
+    //   email: "sou joao@gmail.com",
+    //   sexo: 'Feminino',
+    //   telefone: '(00) 9876-5432',
+    //   cep: '54321-678',
+    // };
 
-    updateClients(fictitiousClient);
+    // updateClients(fictitiousClient);
     navigate("/admin/clients");
   };
 

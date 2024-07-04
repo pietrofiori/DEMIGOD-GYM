@@ -14,7 +14,7 @@ export const columnsClients: ColumnDef<ClientsInterface>[] = [
     header: "ID",
   },
   {
-    accessorKey: "fullName",
+    accessorKey: "nome",
     header: ({ column }) => {
       return (
         <Button

@@ -33,33 +33,39 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { ClientsInterface } from "./ClientsContext";
+import { host } from "@/App";
+import { useClients } from "./ClientsContext";
 
 interface DeleteClientProps {
   id: number;
 }
 
 export default function DeleteClient({ id }: DeleteClientProps) {
+  const {deleteClients} = useClients()
   const handleDeleteClient = async () => {
     try {
-      const response = await fetch("/api/DeleteClient (colocar aqui dps) ", {
+      const response = await fetch(host + "Clientes" + "/" + id, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Colocar o Token aqui": "Token aqui",
         },
-        body: JSON.stringify({
-          id: id,
-        }),
       });
 
-      if (!response.ok) {
-        throw new Error("Erro ao Deletar cliente");
-      }
+      const data = response
+      console.log("Dados retornados:", data); 
 
+      if (!response.ok) {
+         throw new Error("Erro ao Deletar cliente");
+       }else{
+        deleteClients(id)
       toast({
         description: "Cliente deletado com sucesso",
       });
+       }
+
+
     } catch (error) {
+      console.error("Erro ao deletar cliente:", error);
       toast({
         variant: "destructive",
         description: "Ocorreu um erro ao deletar o cliente",
@@ -87,7 +93,9 @@ export default function DeleteClient({ id }: DeleteClientProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteClient}>Confirmar</AlertDialogAction>
+            <AlertDialogAction onClick={handleDeleteClient}>
+              Confirmar
+            </AlertDialogAction>
             {/* <AlertDialogAction onClick={handleDeleteClient}>Confirmar</AlertDialogAction> */}
           </AlertDialogFooter>
         </AlertDialogContent>

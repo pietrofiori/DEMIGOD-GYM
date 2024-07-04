@@ -44,6 +44,8 @@ import { useToast } from "@/components/ui/use-toast";
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { Loader2, Pencil } from "lucide-react";
 import { ClientsInterface } from "./ClientsContext";
+import { host } from "@/App";
+import { useClients } from "./ClientsContext";
 interface ClientProps {
   client?: ClientsInterface;
   isUpdate?: boolean;
@@ -53,14 +55,16 @@ export default function CardCreateClient({
   client,
   isUpdate = false,
 }: ClientProps) {
-  const [nameClient, setNameClient] = useState(client?.fullName || "");
+  const [nameClient, setNameClient] = useState(client?.nome || "");
   const [cpfClient, setCpfClient] = useState(client?.cpf || "");
   const [emailClient, setEmailClient] = useState(client?.email || "");
   const [genderClient, setGenderClient] = useState(client?.sexo || "");
   const [phoneClient, setPhoneClient] = useState(client?.telefone || "");
   const [cepClient, setCepClient] = useState(client?.cep || "");
+  const [idadeClient, setIdadeClient] = useState(client?.idade || "");
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
+  const { updateClients, updateSpecificClient } = useClients();
 
   const handleNameClient = (event: ChangeEvent<HTMLInputElement>) => {
     setNameClient(event.target.value);
@@ -83,50 +87,61 @@ export default function CardCreateClient({
     setCepClient(event.target.value);
   };
 
+  const handleIdadeClient = (event: ChangeEvent<HTMLInputElement>) => {
+    setIdadeClient(event.target.value);
+  };
+
   const unMask = (value: any) => {
     return value.replace(/[^0-9]/g, "");
   };
 
   const handleCreateClient = async () => {
-    if (isUpdate) {
-      // fetch para atualizar os dados com method PUT
-    } else {
-      try {
-        setIsCreating(true);
-        const response = await fetch("/api/AddClient (colocar aqui dps) ", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Colocar o Token aqui": "Token aqui",
-          },
-          body: JSON.stringify({
-            name: nameClient,
-            cpf: unMask(cpfClient),
-            email: emailClient,
-            gender: genderClient,
-            phone: unMask(phoneClient),
-            cep: cepClient,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Erro ao cadastrar cliente");
-        }
-
-        toast({
-          description: "Cliente cadastrado com sucesso",
-        });
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          description: "Ocorreu um erro ao cadastrar o cliente",
-        });
-      } finally {
-        setIsCreating(false);
+    try {
+      setIsCreating(true);
+      const method = isUpdate ? "PUT" : "POST";
+      const endpoint = isUpdate ? `${host}Clientes/${client?.id}` : `${host}Clientes`; 
+  
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: nameClient,
+          cpf: unMask(cpfClient),
+          email: emailClient,
+          sexo: genderClient,
+          telefone: unMask(phoneClient),
+          cep: cepClient,
+          idade: idadeClient,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Erro ao ${isUpdate ? "atualizar" : "cadastrar"} cliente`);
       }
+  
+      const data = await response.json();
+      console.log(`Cliente ${data.cliente} ${isUpdate ? "atualizado" : "cadastrado"} com sucesso:`);
+      
+      // atualizar no contexto ~pietro
+      // isUpdate ? updateSpecificClient
+  
+      updateClients(data.cliente);
+
+  
+      toast({
+        description: data.mensagem,
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: `Ocorreu um erro ao ${isUpdate ? "atualizar" : "cadastrar"} o cliente`,
+      });
+    } finally {
+      setIsCreating(false);
     }
   };
-
   const handleDeleteButton = () => {
     // try {
     //   wss?.sendMessage({
@@ -165,6 +180,20 @@ export default function CardCreateClient({
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
           <Label className="text-end" htmlFor="buttonName">
+            Idade do Aluno
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonName"
+            placeholder="Idade do Aluno"
+            value={idadeClient}
+            onChange={handleIdadeClient}
+            required
+            type="number"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonName">
             CPF
           </Label>
           <Input
@@ -199,8 +228,8 @@ export default function CardCreateClient({
               <SelectValue placeholder="Selecione o Gênero " />
             </SelectTrigger>
             <SelectContent position="popper">
-              <SelectItem value="masculino">Masculino</SelectItem>
-              <SelectItem value="feminino">Feminino</SelectItem>
+              <SelectItem value="Masculino">Masculino</SelectItem>
+              <SelectItem value="Feminino">Feminino</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -226,12 +255,11 @@ export default function CardCreateClient({
           <Input
             className="col-span-3"
             id="buttonName"
-            placeholder="(51) X-XXXXXXXX"
-            pattern="\d{11}"
+            placeholder="00000-000"
             value={cepClient}
             onChange={handleCepClient}
             required
-            type="number"
+            type="text"
           />
         </div>
       </CardContent>

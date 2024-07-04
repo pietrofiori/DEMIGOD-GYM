@@ -3,12 +3,13 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 
 export interface ClientsInterface {
   id: number;
-  fullName: string;
+  nome: string;
   cpf: string;
   email: string;
   sexo: string;
   telefone: string;
   cep: string; // o ? significa que o valor nao precisa ser presente , se for nulo nao tem problema
+  idade: number;
 
 }
 
@@ -16,6 +17,7 @@ interface ClientsInterfaceType {
   clients: ClientsInterface[];
   setClients: React.Dispatch<React.SetStateAction<ClientsInterface[]>>;
   updateClients: (client: ClientsInterface) => void;
+  updateSpecificClient: (client: ClientsInterface) => void;
   deleteClients: (id: number) => void;
   clearClients: () => void;
 }
@@ -30,6 +32,14 @@ export const ClientProvider = ({ children }: { children: ReactNode }) => {
     setClients((prevClients) => [...prevClients, client]);
   };
 
+  const updateSpecificClient = (updatedClient: ClientsInterface) => {
+    setClients((prevClients) =>
+      prevClients.map((client) =>
+        client.id === updatedClient.id ? updatedClient : client
+      )
+    );
+  };
+
   const clearClients = () => {
     setClients([]);
   };
@@ -41,7 +51,7 @@ export const ClientProvider = ({ children }: { children: ReactNode }) => {
   };
   return (
     <ClientsContext.Provider
-      value={{ clients, setClients, updateClients, clearClients, deleteClients }}
+      value={{ clients, setClients, updateClients, clearClients, deleteClients, updateSpecificClient, }}
     >
       {children}
     </ClientsContext.Provider>

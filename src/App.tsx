@@ -15,8 +15,9 @@ import { ThemeProvider } from "./components/theme-provider";
 import { InstrutorProvider } from "./components/instrutores/InstrutoresContext";
 import { PlanoProvider } from "./components/planos/PlanosContext";
 import { ModalidadeProvider } from "./components/modalidades/ModalidadesContext";
+import { Toaster } from "./components/ui/toaster";
 
-
+export const host = "https://localhost:7288/api/"
 function App() {
   return (
     <ThemeProvider>
@@ -39,6 +40,7 @@ function App() {
         </PlanoProvider>
         </ModalidadeProvider>
       </LanguageProvider>
+      <Toaster/>
     </ThemeProvider>
   );
 }
