@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import CardCreateMaquinas from "@/components/maquinas/CardCreateMaquinas";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -80,12 +81,12 @@ export function DataTable<TData, TValue>({
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <div>
-                <Button variant="blue">Cadastrar Aluno</Button>
+                <Button variant="blue">Cadastrar Máquina</Button>
               </div>
             </DialogTrigger>
             <div>
               <DialogContent>
-                <CardCreateClient
+                <CardCreateMaquinas
                  onSuccess={() => setIsDialogOpen(false)} />
               </DialogContent>
             </div>

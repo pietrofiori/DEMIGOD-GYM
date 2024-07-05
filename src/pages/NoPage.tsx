@@ -8,7 +8,7 @@ export default function NoPage() {
                 <h1 className='text-4xl font-bold'>404</h1>
                 <p className='text-lg'>Página não encontrada</p>
                 <BotOff size={200} />
-                <Button asChild>
+                <Button asChild variant="blue">
                     <a href="/Login">Voltar a pagina de Login</a>
                 </Button>
             </div>

@@ -12,6 +12,7 @@ import CardCreateInstrutor from "@/components/instrutores/CardCreateInstrutor";
 import CardCreatePlanos from "@/components/planos/CardCreatePlanos";
 import DeletePlano from "@/components/planos/DeletePlanos";
 import { PlanosInterface } from "@/components/planos/PlanosContext";
+import { useState } from "react";
 // criar contexto de Instrutor
 export const columnsPlanos: ColumnDef<PlanosInterface>[] = [
   {
@@ -25,7 +26,8 @@ export const columnsPlanos: ColumnDef<PlanosInterface>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >Nome do Plano{/*Ajustar text*/}
+        >
+          Nome do Plano{/*Ajustar text*/}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -50,20 +52,25 @@ export const columnsPlanos: ColumnDef<PlanosInterface>[] = [
     header: "Opções",
     cell: ({ row }) => {
       const plano = row.original;
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
 
       return (
         <div className="flex justify-center gap-1 items-center">
-           {/* ATUALIZAR*/}
-          <Dialog>
+          {/* ATUALIZAR*/}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
               <Pencil />
             </DialogTrigger>
             <DialogContent>
-              <CardCreatePlanos plano={plano} isUpdate={true} />
+              <CardCreatePlanos
+                plano={plano}
+                isUpdate={true}
+                onSuccess={() => setIsDialogOpen(false)}
+              />
             </DialogContent>
           </Dialog>
           {/* DELETAR*/}
-            <DeletePlano id={plano.id}/>
+          <DeletePlano id={plano.id} />
         </div>
       );
     },

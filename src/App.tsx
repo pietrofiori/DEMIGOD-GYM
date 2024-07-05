@@ -16,12 +16,14 @@ import { InstrutorProvider } from "./components/instrutores/InstrutoresContext";
 import { PlanoProvider } from "./components/planos/PlanosContext";
 import { ModalidadeProvider } from "./components/modalidades/ModalidadesContext";
 import { Toaster } from "./components/ui/toaster";
+import { MaquinasProvider } from "./components/maquinas/MaquinasContext";
 
 export const host = "https://localhost:7288/api/"
 function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
+        <MaquinasProvider>
         <ModalidadeProvider>
         <PlanoProvider>
           <InstrutorProvider>
@@ -39,6 +41,7 @@ function App() {
           </InstrutorProvider>
         </PlanoProvider>
         </ModalidadeProvider>
+        </MaquinasProvider>
       </LanguageProvider>
       <Toaster/>
     </ThemeProvider>

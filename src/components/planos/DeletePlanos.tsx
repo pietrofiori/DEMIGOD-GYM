@@ -33,36 +33,40 @@ import {
   } from "@/components/ui/alert-dialog";
   import { useToast } from "@/components/ui/use-toast";
 import { PlanosInterface } from "./PlanosContext";
+import { host } from "@/App";
+import { usePlanos } from "./PlanosContext";
   
   interface DeletePlanosProps {
     id: number;
   }
   
   export default function DeletePlano({ id }: DeletePlanosProps) {
+    const {deletePlanos} = usePlanos()
     const handleDeletePlano = async () => {
       try {
-        const response = await fetch("/api/DeletePlano (colocar aqui dps) ", {
+        const response = await fetch(host + "Planos" + "/" + id, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Colocar o Token aqui": "Token aqui",
           },
-          body: JSON.stringify({
-            id: id,
-          }),
         });
+  
+        const data = response;
+        console.log("Dados retornados:", data);
   
         if (!response.ok) {
-          throw new Error("Erro ao Deletar Instrutor");
+          throw new Error("Erro ao Deletar Plano");
+        } else {
+          deletePlanos(id);
+          toast({
+            description: "Plano deletado com sucesso",
+          });
         }
-  
-        toast({
-          description: "Instrutore deletado com sucesso",
-        });
       } catch (error) {
+        console.error("Erro ao deletar Plano:", error);
         toast({
           variant: "destructive",
-          description: "Ocorreu um erro ao deletar o cliente",
+          description: "Ocorreu um erro ao deletar o Plano",
         });
       }
     };

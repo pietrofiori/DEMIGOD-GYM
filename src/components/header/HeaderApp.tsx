@@ -16,66 +16,33 @@ import { useModalidades } from "../modalidades/ModalidadesContext";
 
 export default function HeaderApp() {
   const account = useAccount();
-  const {updateClients} = useClients() // apagar depois de testar
-  const {updateInstrutores} = useInstrutores() // apagar depois de testar
-  const {updatePlanos} = usePlanos()
-  const {updateModalidades} = useModalidades()
+  const { updateClients } = useClients(); // apagar depois de testar
+  const { updateInstrutores } = useInstrutores(); // apagar depois de testar
+  const { updatePlanos } = usePlanos();
+  const { updateModalidades } = useModalidades();
   const navigate = useNavigate();
 
   const { language } = useLanguage();
 
   const handlePlanosViewClick = () => {
-    const fictitiousPlano = {
-      id: 1, // Pode gerar um ID único aqui
-      nome: 'Mensal',
-      preco: '120',
-    };
-
-    updatePlanos(fictitiousPlano);
     navigate("/admin/planos");
   };
 
   const handleInstrutoresViewClick = () => {
-    const fictitiousInstrutor = {
-      id: 1, // Pode gerar um ID único aqui
-      fullName: 'Cuca Beludo',
-      cpf: '123.456.999-00',
-      email: "sou cucabeludo@gmail.com",
-      sexo: 'Masculino',
-      telefone: '(00) 9876-5432',
-      cep: '54321-678',
-    };
-
-    updateInstrutores(fictitiousInstrutor);
     navigate("/admin/instrutores");
   };
   const handleClientViewClick = () => {
-    // const fictitiousClient = {
-    //   id: 1, // Pode gerar um ID único aqui
-    //   fullName: 'João Souza',
-    //   cpf: '123.456.789-00',
-    //   email: "sou joao@gmail.com",
-    //   sexo: 'Feminino',
-    //   telefone: '(00) 9876-5432',
-    //   cep: '54321-678',
-    // };
-
-    // updateClients(fictitiousClient);
     navigate("/admin/clients");
   };
 
   const handleModalidadesViewClick = () => {
-    const fictitiousModalidade= {
-      id: 1, // Pode gerar um ID único aqui
-      nome: 'Pilates',
-      preco: '150',
-    };
-
-    updateModalidades(fictitiousModalidade);
     navigate("/admin/modalidades");
   };
   const handleAvaliacoesViewClick = () => {
     navigate("/admin/avaliacoes");
+  };
+  const handleMaquinasViewClick = () => {
+    navigate("/admin/maquinas");
   };
 
   return (
@@ -113,15 +80,11 @@ export default function HeaderApp() {
           <Button variant="ghost" onClick={handleAvaliacoesViewClick}>
             Avaliações Físicas
           </Button>
-          <Button variant="ghost" >
+          <Button variant="ghost" onClick={handleMaquinasViewClick}>
             Máquinas
           </Button>
-          <Button variant="ghost" >
-            Filiais
-          </Button>
-          <Button variant="ghost" >
-            Conta
-          </Button>
+          <Button variant="ghost">Filiais</Button>
+          <Button variant="ghost">Conta</Button>
 
           <Logout />
           <ModeToggle />

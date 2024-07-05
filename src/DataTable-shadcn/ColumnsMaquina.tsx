@@ -4,19 +4,15 @@ import DeleteClient from "@/components/clients/DeleteClient";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Pencil, Trash2 } from "lucide-react";
-import { InstrutoresInterface } from "@/components/instrutores/InstrutoresContext";
+import { ClientsInterface } from "@/components/clients/ClientsContext";
 import CardCreateClient from "@/components/clients/CardCreateClient";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import DeleteInstrutor from "@/components/instrutores/DeleteInstrutor";
-import CardCreateInstrutor from "@/components/instrutores/CardCreateInstrutor";
-import CardCreatePlanos from "@/components/planos/CardCreatePlanos";
-import DeletePlano from "@/components/planos/DeletePlanos";
-import { ModalidadesInterface } from "@/components/modalidades/ModalidadesContext";
-import CardCreateModalidades from "@/components/modalidades/CardCreateModalidades";
-import DeleteModalidade from "@/components/modalidades/DeleteModalidades";
 import { useState } from "react";
-// criar contexto de Instrutor
-export const columnsModalidades: ColumnDef<ModalidadesInterface>[] = [
+import { MaquinasInterface } from "@/components/maquinas/MaquinasContext";
+import CardCreateMaquinas from "@/components/maquinas/CardCreateMaquinas";
+import DeleteMaquina from "@/components/maquinas/DeleteMaquinas";
+// criar contexto de clients
+export const columnsMaquinas: ColumnDef<MaquinasInterface>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -29,50 +25,46 @@ export const columnsModalidades: ColumnDef<ModalidadesInterface>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nome da Modalidade{/*Ajustar text*/}
+          Nome da  Máquina {/*Ajustar text*/}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "preco",
+    accessorKey: "musculo",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Preço {/*Ajustar text*/}
+          Músculo {/*Ajustar text*/}
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    id: "modalidades",
+    id: "maquinas",
     header: "Opções",
     cell: ({ row }) => {
-      const modalidade = row.original;
-      const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+      const maquinas = row.original;
+      const [isDialogOpen, setIsDialogOpen] = useState(false); 
       return (
         <div className="flex justify-center gap-1 items-center">
-          {/* ATUALIZAR*/}
+           {/* ATUALIZAR*/}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
               <Pencil />
             </DialogTrigger>
             <DialogContent>
-              <CardCreateModalidades
-                modalidade={modalidade}
-                isUpdate={true}
-                onSuccess={() => setIsDialogOpen(false)}
-              />
+              <CardCreateMaquinas maquina={maquinas} isUpdate={true} 
+                onSuccess={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
           {/* DELETAR*/}
-          <DeleteModalidade id={modalidade.id} />
+          <DeleteMaquina id={maquinas.id} />
         </div>
       );
     },

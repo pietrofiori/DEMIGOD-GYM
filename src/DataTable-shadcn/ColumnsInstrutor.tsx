@@ -9,6 +9,7 @@ import CardCreateClient from "@/components/clients/CardCreateClient";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import DeleteInstrutor from "@/components/instrutores/DeleteInstrutor";
 import CardCreateInstrutor from "@/components/instrutores/CardCreateInstrutor";
+import { useState } from "react";
 // criar contexto de Instrutor
 export const columnsInstrutor: ColumnDef<InstrutoresInterface>[] = [
   {
@@ -16,7 +17,7 @@ export const columnsInstrutor: ColumnDef<InstrutoresInterface>[] = [
     header: "ID",
   },
   {
-    accessorKey: "fullName",
+    accessorKey: "nome",
     header: ({ column }) => {
       return (
         <Button
@@ -61,24 +62,33 @@ export const columnsInstrutor: ColumnDef<InstrutoresInterface>[] = [
     header: "CEP",
   },
   {
+    accessorKey: "idade",
+    header: "Idade",
+  },
+  {
     id: "instrutor",
     header: "Opções",
     cell: ({ row }) => {
       const instrutor = row.original;
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
 
       return (
         <div className="flex justify-center gap-1 items-center">
-           {/* ATUALIZAR*/}
-          <Dialog>
+          {/* ATUALIZAR*/}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
               <Pencil />
             </DialogTrigger>
             <DialogContent>
-              <CardCreateInstrutor instrutor={instrutor} isUpdate={true} />
+              <CardCreateInstrutor
+                instrutor={instrutor}
+                isUpdate={true}
+                onSuccess={() => setIsDialogOpen(false)}
+              />
             </DialogContent>
           </Dialog>
           {/* DELETAR*/}
-            <DeleteInstrutor id={instrutor.id}/>
+          <DeleteInstrutor id={instrutor.id} />
         </div>
       );
     },

@@ -40,6 +40,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); 
 
   const table = useReactTable({
     data,
@@ -67,15 +68,15 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder="Filtro pelo Nome..."
           value={
-            (table.getColumn("nom")?.getFilterValue() as string) || ""
+            (table.getColumn("nome")?.getFilterValue() as string) || ""
           }
           onChange={(event) =>
-            table.getColumn("fullName")?.setFilterValue(event.target.value)
+            table.getColumn("nome")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <div>
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <div>
                 <Button variant="blue">Cadastrar Instrutor</Button>
@@ -83,7 +84,7 @@ export function DataTable<TData, TValue>({
             </DialogTrigger>
             <div>
               <DialogContent>
-                <CardCreateInstrutor />
+                <CardCreateInstrutor onSuccess={() => setIsDialogOpen(false)} />
               </DialogContent>
             </div>
           </Dialog>

@@ -49,11 +49,13 @@ import { useClients } from "./ClientsContext";
 interface ClientProps {
   client?: ClientsInterface;
   isUpdate?: boolean;
+  onSuccess?: () => void;
 }
 
 export default function CardCreateClient({
   client,
   isUpdate = false,
+  onSuccess,
 }: ClientProps) {
   const [nameClient, setNameClient] = useState(client?.nome || "");
   const [cpfClient, setCpfClient] = useState(client?.cpf || "");
@@ -99,58 +101,59 @@ export default function CardCreateClient({
     try {
       setIsCreating(true);
       const method = isUpdate ? "PUT" : "POST";
-      const endpoint = isUpdate ? `${host}Clientes/${client?.id}` : `${host}Clientes`; 
-  
+      const endpoint = isUpdate
+        ? `${host}Clientes/${client?.id}`
+        : `${host}Clientes`;
+
+      const clientData = {
+        nome: nameClient,
+        cpf: unMask(cpfClient),
+        email: emailClient,
+        sexo: genderClient,
+        telefone: unMask(phoneClient),
+        cep: cepClient,
+        idade: idadeClient,
+        ...(isUpdate && { id: client?.id }),
+      };
+
       const response = await fetch(endpoint, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          nome: nameClient,
-          cpf: unMask(cpfClient),
-          email: emailClient,
-          sexo: genderClient,
-          telefone: unMask(phoneClient),
-          cep: cepClient,
-          idade: idadeClient,
-        }),
+        body: JSON.stringify(clientData),
       });
-  
-      if (!response.ok) {
-        throw new Error(`Erro ao ${isUpdate ? "atualizar" : "cadastrar"} cliente`);
-      }
-  
-      const data = await response.json();
-      console.log(`Cliente ${data.cliente} ${isUpdate ? "atualizado" : "cadastrado"} com sucesso:`);
-      
-      // atualizar no contexto ~pietro
-      // isUpdate ? updateSpecificClient
-  
-      updateClients(data.cliente);
 
-  
+      if (!response.ok) {
+        throw new Error(
+          `Erro ao ${isUpdate ? "atualizar" : "cadastrar"} cliente`
+        );
+      }
+      // ajustar esses tratamento conforme o ajuste do backend do sabadin , esperar msg de resposta
+      // é daqui para baixo ~pietro
+      const data = isUpdate ? "" : await response.json();
+
+      if (isUpdate) {
+        updateSpecificClient(clientData as any);
+      } else {
+        updateClients(data.cliente);
+      }
+
       toast({
-        description: data.mensagem,
+        description: !isUpdate ? data.mensagem : "Aluno Atualizado com Sucesso",
       });
+
+      onSuccess?.();
     } catch (error) {
       toast({
         variant: "destructive",
-        description: `Ocorreu um erro ao ${isUpdate ? "atualizar" : "cadastrar"} o cliente`,
+        description: `Ocorreu um erro ao ${
+          isUpdate ? "atualizar" : "cadastrar"
+        } o cliente`,
       });
     } finally {
       setIsCreating(false);
     }
-  };
-  const handleDeleteButton = () => {
-    // try {
-    //   wss?.sendMessage({
-    //     api: "admin",
-    //     mt: "DeleteButtons",
-    //     id: existingButton?.id,
-    //   });
-    // } catch (e) {
-    //   console.error(e);
   };
 
   return (

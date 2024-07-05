@@ -12,6 +12,7 @@ interface ModalidadesInterfaceType {
   modalidades: ModalidadesInterface[];
   setModalidades: React.Dispatch<React.SetStateAction<ModalidadesInterface[]>>;
   updateModalidades: (modalidades: ModalidadesInterface) => void;
+  updateSpecificModalidade: (modalidades: ModalidadesInterface) => void;
   deleteModalidades: (id: number) => void;
   clearModalidades: () => void;
 }
@@ -26,6 +27,13 @@ export const ModalidadeProvider = ({ children }: { children: ReactNode }) => {
     setModalidades((prevModalidades) => [...prevModalidades, modalidade]);
   };
 
+  const updateSpecificModalidade = (updatedModalidade: ModalidadesInterface) => {
+    setModalidades((prevModalidades) =>
+      prevModalidades.map((modalidades) =>
+        modalidades.id === updatedModalidade.id ? updatedModalidade : modalidades
+      )
+    );
+  };
   const clearModalidades = () => {
     setModalidades([]);
   };
@@ -37,7 +45,7 @@ export const ModalidadeProvider = ({ children }: { children: ReactNode }) => {
   };
   return (
     <ModalidadesContext.Provider
-      value={{ modalidades, setModalidades, updateModalidades, clearModalidades, deleteModalidades }}
+      value={{ modalidades, setModalidades, updateModalidades, updateSpecificModalidade, clearModalidades, deleteModalidades }}
     >
       {children}
     </ModalidadesContext.Provider>

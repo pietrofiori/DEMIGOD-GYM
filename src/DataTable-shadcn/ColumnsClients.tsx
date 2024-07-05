@@ -7,6 +7,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { ClientsInterface } from "@/components/clients/ClientsContext";
 import CardCreateClient from "@/components/clients/CardCreateClient";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
 // criar contexto de clients
 export const columnsClients: ColumnDef<ClientsInterface>[] = [
   {
@@ -59,20 +60,25 @@ export const columnsClients: ColumnDef<ClientsInterface>[] = [
     header: "CEP",
   },
   {
+    accessorKey: "idade",
+    header: "Idade",
+  },
+  {
     id: "clients",
     header: "Opções",
     cell: ({ row }) => {
       const clients = row.original;
-
+      const [isDialogOpen, setIsDialogOpen] = useState(false); 
       return (
         <div className="flex justify-center gap-1 items-center">
            {/* ATUALIZAR*/}
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
               <Pencil />
             </DialogTrigger>
             <DialogContent>
-              <CardCreateClient client={clients} isUpdate={true} />
+              <CardCreateClient client={clients} isUpdate={true} 
+                onSuccess={() => setIsDialogOpen(false)} />
             </DialogContent>
           </Dialog>
           {/* DELETAR*/}

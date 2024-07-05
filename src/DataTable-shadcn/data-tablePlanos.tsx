@@ -40,6 +40,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); 
 
   const table = useReactTable({
     data,
@@ -75,7 +76,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <div>
-          <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <div>
                 <Button variant="blue">Cadastrar Plano</Button>
@@ -83,7 +84,7 @@ export function DataTable<TData, TValue>({
             </DialogTrigger>
             <div>
               <DialogContent>
-                <CardCreatePlanos />
+                <CardCreatePlanos onSuccess={() => setIsDialogOpen(false)} />
               </DialogContent>
             </div>
           </Dialog>

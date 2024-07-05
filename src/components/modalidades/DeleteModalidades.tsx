@@ -32,37 +32,40 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";
   import { useToast } from "@/components/ui/use-toast";
-  import { ModalidadesInterface } from "./ModalidadesContext";
-  
+  import { ModalidadesInterface, useModalidades } from "./ModalidadesContext";
+  import { host } from "@/App";
+
   interface DeleteModalidadesProps {
     id: number;
   }
   
   export default function DeleteModalidade({ id }: DeleteModalidadesProps) {
+    const {deleteModalidades} = useModalidades()
     const handleDeleteModalidade = async () => {
       try {
-        const response = await fetch("/api/DeleteModalidade (colocar aqui dps) ", {
+        const response = await fetch(host + "Modalidades" + "/" + id, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Colocar o Token aqui": "Token aqui",
           },
-          body: JSON.stringify({
-            id: id,
-          }),
         });
+  
+        const data = response;
+        console.log("Dados retornados:", data);
   
         if (!response.ok) {
-          throw new Error("Erro ao Deletar Modalidade");
+          throw new Error("Erro ao Deletar Modalidades");
+        } else {
+          deleteModalidades(id);
+          toast({
+            description: "Modalidade deletada com sucesso",
+          });
         }
-  
-        toast({
-          description: "Modalidade deletada com sucesso",
-        });
       } catch (error) {
+        console.error("Erro ao deletar Modalidades:", error);
         toast({
           variant: "destructive",
-          description: "Ocorreu um erro ao deletar a Modalidade",
+          description: "Ocorreu um erro ao deletar o Modalidades",
         });
       }
     };

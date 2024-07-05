@@ -3,12 +3,13 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 
 export interface InstrutoresInterface {
   id: number;
-  fullName: string;
+  nome: string;
   cpf: string;
   email: string;
   sexo: string;
   telefone: string;
   cep: string; // o ? significa que o valor nao precisa ser presente , se for nulo nao tem problema
+  idade: number;
 
 }
 
@@ -16,6 +17,7 @@ interface InstrutoresInterfaceType {
   instrutores: InstrutoresInterface[];
   setInstrutores: React.Dispatch<React.SetStateAction<InstrutoresInterface[]>>;
   updateInstrutores: (instrutor: InstrutoresInterface) => void;
+  updateSpecificInstrutor: (instrutor: InstrutoresInterface) => void;
   deleteInstrutores: (id: number) => void;
   clearInstrutores: () => void;
 }
@@ -29,7 +31,13 @@ export const InstrutorProvider = ({ children }: { children: ReactNode }) => {
   const updateInstrutores = (instrutor: InstrutoresInterface) => {
     setInstrutores((prevInstrutores) => [...prevInstrutores, instrutor]);
   };
-
+  const updateSpecificInstrutor = (updatedInstrutor: InstrutoresInterface) => {
+    setInstrutores((prevInstrutores) =>
+      prevInstrutores.map((instrutor) =>
+        instrutor.id === updatedInstrutor.id ? updatedInstrutor : instrutor
+      )
+    );
+  };
   const clearInstrutores = () => {
     setInstrutores([]);
   };
@@ -41,7 +49,7 @@ export const InstrutorProvider = ({ children }: { children: ReactNode }) => {
   };
   return (
     <instrutoresContext.Provider
-      value={{ instrutores, setInstrutores, updateInstrutores, clearInstrutores, deleteInstrutores }}
+      value={{ instrutores, setInstrutores, updateInstrutores, clearInstrutores, deleteInstrutores, updateSpecificInstrutor }}
     >
       {children}
     </instrutoresContext.Provider>
