@@ -13,12 +13,10 @@ import { Label } from "@/components/ui/label";
 import React, { useState, ChangeEvent, useContext } from "react";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
-import { useAccount } from "@/components/account/AccountContext";
 
 import { Navigate } from "react-router-dom";
 
 import texts from "@/_data/texts.json";
-import { useLanguage } from "@/components/language/LanguageContext";
 
 import { Loader2 } from "lucide-react";
 //import { useWebSocketData } from './WebSocketProvider';// Importe o useWebSocketData
@@ -45,10 +43,8 @@ export default function CardLogin() {
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { updateAccount } = useAccount();
   const navigate = useNavigate();
-  const account = useAccount();
-  const { language } = useLanguage();
+
   //const ws = useWebSocketData();
 
   // const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -164,31 +160,27 @@ export default function CardLogin() {
 
   return (
     <Card className="xl:w-[600px] lg:w-[500px] md:[400px] sm:w-[300px] h-fit">
-      <form >
-      {/* onSubmit={handleFormSubmit} */}
+      <form>
+        {/* onSubmit={handleFormSubmit} */}
         <CardHeader>
           <CardTitle>
             <div>
-              <div className="flex justify-between">
-                {texts[language].login}
-              </div>
+              <div className="flex justify-between">Login</div>
             </div>
           </CardTitle>
-          <CardDescription>
-            {texts[language].enterEmail} e {texts[language].enterPassword}
-          </CardDescription>
+          <CardDescription>Digite o email e senha</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 py-9">
           <div className="grid w-full items-center gap-6">
             <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="email" className="text-end">
-                {texts[language].enterEmail}
+                Digite o E-mail
               </Label>
               <Input
                 id="email"
                 type="email"
                 className="col-span-2"
-                placeholder={texts[language].enterEmail}
+                placeholder="Digite o E-mail"
                 value={email}
                 required
                 // onChange={handleEmailChange}
@@ -197,14 +189,14 @@ export default function CardLogin() {
             <div className="flex flex-col space-y-1.5">
               <div className="grid grid-cols-3 items-center gap-4">
                 <Label htmlFor="password" className="text-end">
-                  {texts[language].enterPassword}
+                 Digite a Senha
                 </Label>
                 <Input
                   id="password"
                   type="password"
                   required
                   className="col-span-2"
-                  placeholder={texts[language].enterPassword}
+                  placeholder="Digite a Senha"
                   value={password}
                   //onChange={handlePasswordChange}
                 />

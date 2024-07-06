@@ -2,27 +2,28 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import {
   AccountProvider,
-  AccountContext,
-  useAccount,
+
 } from "./components/account/AccountContext";
 import LoginPage from "./pages/LoginPage";
 import AdminLayout from "./pages/admin/AdminLayout";
 import NoPage from "./pages/NoPage";
 
 import { ClientProvider } from "./components/clients/ClientsContext";
-import LanguageProvider from "./components/language/LanguageContext";
 import { ThemeProvider } from "./components/theme-provider";
 import { InstrutorProvider } from "./components/instrutores/InstrutoresContext";
 import { PlanoProvider } from "./components/planos/PlanosContext";
 import { ModalidadeProvider } from "./components/modalidades/ModalidadesContext";
 import { Toaster } from "./components/ui/toaster";
 import { MaquinasProvider } from "./components/maquinas/MaquinasContext";
+import { AvaliacaoProvider } from "./components/avaliacoes/AvaliacoesContext";
+import { FilialProvider } from "./components/filiais/FiliaisContext";
 
 export const host = "https://localhost:7288/api/"
 function App() {
   return (
     <ThemeProvider>
-      <LanguageProvider>
+      <FilialProvider>
+      <AvaliacaoProvider>
         <MaquinasProvider>
         <ModalidadeProvider>
         <PlanoProvider>
@@ -42,7 +43,8 @@ function App() {
         </PlanoProvider>
         </ModalidadeProvider>
         </MaquinasProvider>
-      </LanguageProvider>
+        </AvaliacaoProvider>
+        </FilialProvider>
       <Toaster/>
     </ThemeProvider>
   );

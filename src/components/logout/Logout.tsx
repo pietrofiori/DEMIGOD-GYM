@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { useAccount } from "@/components/account/AccountContext";
-import { initialState } from "@/components/account/AccountContext";
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,12 +14,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"; // Importe o useWebSocketData
 import texts from "@/_data/texts.json";
-import { useLanguage } from "@/components/language/LanguageContext";
+
 
 export default function Logout() {
   const navigate = useNavigate();
 
-  const { language } = useLanguage();
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -33,21 +32,21 @@ export default function Logout() {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button variant="ghost">{texts[language].logoutButton}</Button>
+        <Button variant="ghost">Sair</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {texts[language].logoutConfirmation}
+            Voce tem certeza? 
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {texts[language].logoutDescription}
+            ao clicar em confirmar você será deslogado do aplicativo
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{texts[language].cancel}</AlertDialogCancel>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction asChild >
-            <a onClick={handleLogout}>{texts[language].logout}</a>
+            <a onClick={handleLogout}>Sair</a>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

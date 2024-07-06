@@ -12,6 +12,7 @@ export default function InstrutoresPage() {
   return (
     // fazer o fetch na api para consultar os instrutor
     <div className="px-2 flex flex-col gap-4 justify-center sm:mx-[5px] md:mx-[100px] lg:mx-[150px]">
+            <h1 className="text-3xl">Instrutores</h1>
       <ScrollArea className="h-[500px]">
         <DataTable columns={columnsinstrutor} data={instrutores} />
       </ScrollArea>

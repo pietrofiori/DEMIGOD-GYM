@@ -1,7 +1,6 @@
 import logoApp from "@/assets/logoApp.png";
 
 import CardLogin from "@/components/login/CardLogin"
-import { LanguageToggle } from "@/components/language/LanguageToggle";
 
 
 export default function LoginPage() {

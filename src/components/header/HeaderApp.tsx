@@ -5,27 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useClients } from "../clients/ClientsContext"; // apagar depois de testar
 import Logout from "@/components/logout/Logout";
-import { useAccount } from "@/components/account/AccountContext";
+import { useAccounts } from "../account/AccountContext";
 import { useNavigate } from "react-router-dom";
 import { useInstrutores } from "../instrutores/InstrutoresContext";
-import { LanguageToggle } from "@/components/language/LanguageToggle";
+
 import texts from "../../_data/texts.json";
-import { useLanguage } from "../language/LanguageContext";
 import { usePlanos } from "../planos/PlanosContext";
 import { useModalidades } from "../modalidades/ModalidadesContext";
 
 export default function HeaderApp() {
-  const account = useAccount();
+  const { accounts } = useAccounts();
   const { updateClients } = useClients(); // apagar depois de testar
   const { updateInstrutores } = useInstrutores(); // apagar depois de testar
   const { updatePlanos } = usePlanos();
   const { updateModalidades } = useModalidades();
   const navigate = useNavigate();
 
-  const { language } = useLanguage();
-
   const handlePlanosViewClick = () => {
     navigate("/admin/planos");
+  };
+
+  const handleReportsViewClick = () => {
+    navigate("/admin/relatorios");
   };
 
   const handleInstrutoresViewClick = () => {
@@ -44,6 +45,12 @@ export default function HeaderApp() {
   const handleMaquinasViewClick = () => {
     navigate("/admin/maquinas");
   };
+  const handleContaViewClick = () => {
+    navigate("/admin/contas");
+  };
+  const handleFiliaisViewClick = () => {
+    navigate("/admin/filiais");
+  };
 
   return (
     <header className="flex justify-between items-center p-2 mb-3">
@@ -57,14 +64,19 @@ export default function HeaderApp() {
         />
         <div>
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-            {account?.name || "Administrador"}
+            Administrador
           </h3>
-          <p className="text-sm text-muted-foreground">{account?.email}</p>
+          <p className="text-sm text-muted-foreground">
+            adminDemiGod@gmail.com
+          </p>
         </div>
       </div>
 
       <div className="flex items-end ">
         <div className="flex items-center gap-1">
+        <Button variant="ghost" onClick={handleReportsViewClick}>
+            Relatórios
+          </Button>
           <Button variant="ghost" onClick={handleClientViewClick}>
             Clientes
           </Button>
@@ -83,12 +95,15 @@ export default function HeaderApp() {
           <Button variant="ghost" onClick={handleMaquinasViewClick}>
             Máquinas
           </Button>
-          <Button variant="ghost">Filiais</Button>
-          <Button variant="ghost">Conta</Button>
+          <Button variant="ghost" onClick={handleFiliaisViewClick}>
+            Filiais
+          </Button>
+          <Button variant="ghost" onClick={handleContaViewClick}>
+            Conta
+          </Button>
 
           <Logout />
           <ModeToggle />
-          <LanguageToggle />
         </div>
       </div>
     </header>

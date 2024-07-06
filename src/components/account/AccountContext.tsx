@@ -1,78 +1,67 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
-interface Account {
-  createdAt: string;
+export interface AccountInterface {
+  id: number;
+  login: string;
+  senha: string;
+  nome: string;
+  cpf: string;
   email: string;
-  guid: string;
-  id: string;
-  name: string;
-  password: string;
-  sip: string;
-  type: string; //saber se é admin ou user
-  updatedAt: string;
-  accessToken: string;
-  isAdmin: boolean; // pra saber se vai logar como admin ou user
-  isLogged: boolean; // pra saber se está logado
-}
-export const initialState: Account = {
-  createdAt: '',
-  email: '',
-  guid: '',
-  id: '',
-  name: '',
-  password: '',
-  sip: '',
-  type: '',
-  updatedAt: '',
-  accessToken: '',
-  isAdmin: false,
-  isLogged: false,
-};
-
-type AccountContextData = Account & {
-  updateAccount: (newAccountData: Partial<Account> | Account) => void;
+  sexo: string;
+  telefone: string;
+  cep: string; 
+  idade: number;
 }
 
-interface AccountProviderProps {
-  children: React.ReactNode;
+interface AccountContextType {
+  accounts: AccountInterface[];
+  setAccounts: React.Dispatch<React.SetStateAction<AccountInterface[]>>;
+  updateAccount: (account: AccountInterface) => void;
+  updateSpecificAccount: (account: AccountInterface) => void;
+  deleteAccount: (id: number) => void;
+  clearAccounts: () => void;
 }
 
-export const AccountContext = createContext<AccountContextData>({
-  ...initialState,
-  updateAccount: () => {},
-});
+const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
-export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
+export const AccountProvider = ({ children }: { children: ReactNode }) => {
+  const [accounts, setAccounts] = useState<AccountInterface[]>([]);
 
-  const [Account, setAccount] = useState<Account>(initialState);
+  const updateAccount = (account: AccountInterface) => {
+    setAccounts((prevAccounts) => [...prevAccounts, account]);
+  };
 
-  useEffect(() => {
-    const storedAccount = localStorage.getItem('Account');
-    if (storedAccount) {
-      setAccount(JSON.parse(storedAccount));
-    }
-  }, []);
+  const updateSpecificAccount = (updatedAccount: AccountInterface) => {
+    setAccounts((prevAccounts) =>
+      prevAccounts.map((account) =>
+        account.id === updatedAccount.id ? updatedAccount : account
+      )
+    );
+  };
 
-  useEffect(() => {
-    localStorage.setItem('Account', JSON.stringify(Account));
-  }, [Account]);
+  const clearAccounts = () => {
+    setAccounts([]);
+  };
 
-  // Função para atualizar a conta
-  const updateAccount = (newAccountData: Partial<Account> | Account) => {
-    setAccount(prevAccount => ({ ...prevAccount, ...newAccountData }));
-  }
+  const deleteAccount = (id: number) => {
+    setAccounts((prevAccounts) =>
+      prevAccounts.filter((account) => account.id !== id)
+    );
+  };
+
   return (
-
-    <AccountContext.Provider value={{ ...Account, updateAccount }}>
+    <AccountContext.Provider
+      value={{ accounts, setAccounts, updateAccount, updateSpecificAccount, clearAccounts, deleteAccount }}
+    >
       {children}
     </AccountContext.Provider>
   );
 };
 
-export const useAccount = (): AccountContextData => {
+export const useAccounts = (): AccountContextType => {
   const context = useContext(AccountContext);
-  if (!context) {
-    throw new Error("useAccount must be used within an AccountProvider");
+  if (context === undefined) {
+    throw new Error("useAccounts must be used within an AccountProvider");
   }
   return context;
 };

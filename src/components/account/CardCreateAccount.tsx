@@ -1,3 +1,21 @@
+import React, { useState, ChangeEvent } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,257 +27,282 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { useState, ChangeEvent } from "react";
 import { Loader2 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogClose,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import texts from "../../_data/texts.json";
-import { useLanguage } from "@/components/language/LanguageContext";
+import { AccountInterface } from "./AccountContext";
+import { host } from "@/App";
+import { useAccounts } from "./AccountContext";
 
-interface User {
-  id: string;
-  name: string;
-  guid: string;
-  email: string;
-  sip: string;
-  // Adicione aqui outros campos se necessário
+interface AccountProps {
+  account?: AccountInterface;
+  isUpdate?: boolean;
+  onSuccess?: () => void;
 }
-export default function CardCreateAccount() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [sip, setSip] = useState("");
-  const [type, setType] = useState<string>("");
+
+export default function CardCreateAccount({
+  account,
+  isUpdate = false,
+  onSuccess,
+}: AccountProps) {
+  const [nameAccount, setNameAccount] = useState(account?.nome || "");
+  const [cpfAccount, setCpfAccount] = useState(account?.cpf || "");
+  const [emailAccount, setEmailAccount] = useState(account?.email || "");
+  const [genderAccount, setGenderAccount] = useState(account?.sexo || "");
+  const [phoneAccount, setPhoneAccount] = useState(account?.telefone || "");
+  const [cepAccount, setCepAccount] = useState(account?.cep || "");
+  const [idadeAccount, setIdadeAccount] = useState(account?.idade || "");
+  const [loginAccount, setLoginAccount] = useState(account?.login || "");
+  const [passwordAccount, setPasswordAccount] = useState(account?.senha || "");
   const [isCreating, setIsCreating] = useState(false);
-  const { language } = useLanguage();
-
   const { toast } = useToast();
+  const { updateAccount, updateSpecificAccount } = useAccounts();
 
-  interface ContaProps {
-    onUserCreated: () => void;
-  }
-
-  const passwordValidation = (password: string) => {
-    setIsCreating(true);
-    // Verifica se a senha tem pelo menos 6 caracteres
-    if (password.length < 6) {
-      toast({
-        variant: "destructive",
-        description: "A senha deve ter pelo menos 6 caracteres",
-      });
-      return false;
-    }
-
-    // Verifica se a senha contém pelo menos um caractere especial
-    const specialCharacterRegex = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-    if (!specialCharacterRegex.test(password)) {
-      toast({
-        variant: "destructive",
-        description: "A senha deve conter pelo menos um caractere especial",
-      });
-      return false;
-    }
-
-    return true;
+  const handleNameAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setNameAccount(event.target.value);
   };
 
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+  const handleCpfAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setCpfAccount(event.target.value);
   };
 
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-  const handleSipChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSip(event.target.value);
-  };
-  const handleTypeChange = (value: string) => {
-    setType(value);
-  };
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+  const handleEmailAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmailAccount(event.target.value);
   };
 
-  const resetForm = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setSip("");
-    setType("");
+  const handleGenderAccount = (value: string) => {
+    setGenderAccount(value);
   };
 
-  const handleCreateUser = async () => {
-    console.log(
-      `Nome: ${name},Email: ${email}, Senha: ${password}, SIP: ${sip}, Tipo de conta: ${type}`
-    );
+  const handlePhoneAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setPhoneAccount(event.target.value);
+  };
 
-    setIsCreating(true);
+  const handleCepAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setCepAccount(event.target.value);
+  };
 
-    if (!passwordValidation(password)) {
-      toast({
-        variant: "destructive",
-        description: "Senha inválida",
-      });
-      setIsCreating(false);
-      return;
-    }
-    const obj = {
-      email: email,
-      password: password,
-      name: name,
-      sip: sip,
-      type: type,
-    };
+  const handleIdadeAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setIdadeAccount(event.target.value);
+  };
 
+  const handleLoginAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setLoginAccount(event.target.value);
+  };
+
+  const handlePasswordAccount = (event: ChangeEvent<HTMLInputElement>) => {
+    setPasswordAccount(event.target.value);
+  };
+
+  const unMask = (value: string) => {
+    return value.replace(/[^0-9]/g, "");
+  };
+
+  const handleCreateAccount = async () => {
     try {
-      const response = await fetch("https://meet.wecom.com.br/api/create", {
-        method: "POST",
+      setIsCreating(true);
+      const method = isUpdate ? "PUT" : "POST";
+      const endpoint = isUpdate
+        ? `${host}Contas/${account?.id}`
+        : `${host}Contas`;
+
+      const accountData = {
+        nome: nameAccount,
+        cpf: unMask(cpfAccount),
+        email: emailAccount,
+        sexo: genderAccount,
+        telefone: unMask(phoneAccount),
+        cep: cepAccount,
+        idade: idadeAccount,
+        login: loginAccount,
+        senha: passwordAccount,
+        ...(isUpdate && { id: account?.id }),
+      };
+
+      const response = await fetch(endpoint, {
+        method,
         headers: {
           "Content-Type": "application/json",
-          "x-auth": localStorage.getItem("token") || "",
         },
-        body: JSON.stringify(obj),
+        body: JSON.stringify(accountData),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        // Se o servidor retornar um código de status que não está no intervalo 200-299,
-        // então nós lançamos um erro
-        if (data.error === "emailDuplicated") {
-          // Se a mensagem de erro for 'Email already exists', então exibimos um toast específico
-          toast({
-            variant: "destructive",
-            description: "Email já está em uso",
-          });
-        } else {
-          // Se a mensagem de erro for diferente, então exibimos um toast genérico
-          toast({
-            variant: "destructive",
-            description: data.error,
-          });
-        }
-        throw new Error(data.error);
-      } else {
-        console.log(data);
-        // Exibe um toast de sucesso
-        toast({
-          description: "Conta criada com sucesso",
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-
-        //fazer com que atulize a lista de contas
+        throw new Error(
+          `Erro ao ${isUpdate ? "atualizar" : "cadastrar"} conta`
+        );
       }
+
+      const data = isUpdate ? "" : await response.json();
+
+      if (isUpdate) {
+        updateSpecificAccount(accountData as any);
+      } else {
+        updateAccount(data);
+      }
+
+      toast({
+        description: !isUpdate ? "Conta Cadastrada com Sucesso" : "Conta Atualizada com Sucesso",
+      });
+
+      onSuccess?.();
     } catch (error) {
-      // Aqui você pode lidar com qualquer erro que possa ocorrer durante a criação da conta
+      toast({
+        variant: "destructive",
+        description: `Ocorreu um erro ao ${
+          isUpdate ? "atualizar" : "cadastrar"
+        } a conta`,
+      });
+    } finally {
+      setIsCreating(false);
     }
-    setIsCreating(false);
   };
+
   return (
-    //div que contem os cards
-    <div className="flex flex-col md:flex-row gap-5 justify-center">
-      <Dialog onOpenChange={(isOpen) => !isOpen && resetForm()}>
-        <DialogTrigger>
-          <Button>{texts[language].cardCreateAccountTrigger}</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{texts[language].cardCreateAccountTittle}</DialogTitle>
-            <DialogDescription>
-              {texts[language].cardCreateAccountDescription}
-            </DialogDescription>
-          </DialogHeader>
-          {/* Card de criação de usuario */}
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label className="text-end" htmlFor="name">
-                Nome
-              </Label>
-              <Input
-                className="col-span-2"
-                id="name"
-                placeholder="Nome"
-                type="text"
-                value={name}
-                onChange={handleNameChange}
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label className="text-end" htmlFor="name">
-                Email
-              </Label>
-              <Input
-                className="col-span-2"
-                id="email"
-                placeholder="Email"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label className="text-end" htmlFor="name">
-                Senha
-              </Label>
-              <Input
-                className="col-span-2"
-                id="password"
-                type="password"
-                placeholder="Senha"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label className="text-end" htmlFor="name">
-                SIP
-              </Label>
-              <Input
-                className="col-span-2"
-                id="sip"
-                placeholder="SIP"
-                value={sip}
-                onChange={handleSipChange}
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label className="text-end" htmlFor="framework" id="type">
-                Tipo de conta
-              </Label>
-              <Select value={type} onValueChange={handleTypeChange}>
-                <SelectTrigger className="col-span-2" id="type">
-                  <SelectValue placeholder="Selecione o tipo de conta" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="user">Usuario</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <DialogClose className="flex justify-end">
-              {!isCreating && (
-                <Button onClick={handleCreateUser}>Criar conta</Button>
-              )}
-              {isCreating && (
-                <Button disabled>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Criar conta
-                </Button>
-              )}
-            </DialogClose>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+    <>
+      <CardHeader>
+        <CardTitle>
+          {isUpdate ? "Atualizar dados da conta" : "Cadastrar Conta"}
+        </CardTitle>
+        <CardDescription>
+          Insira os dados abaixo para {isUpdate ? "atualizar" : "cadastrar"} uma
+          nova conta
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonName">
+            Nome da Conta
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonName"
+            placeholder="Nome da Conta"
+            value={nameAccount}
+            onChange={handleNameAccount}
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonLogin">
+            Login
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonLogin"
+            placeholder="Login da Conta"
+            value={loginAccount}
+            onChange={handleLoginAccount}
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonPassword">
+            Senha
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonPassword"
+            type="password"
+            placeholder="Senha da Conta"
+            value={passwordAccount}
+            onChange={handlePasswordAccount}
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonEmail">
+            E-mail
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonEmail"
+            placeholder="E-mail da Conta"
+            value={emailAccount}
+            onChange={handleEmailAccount}
+            required
+            type="email"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonCpf">
+            CPF
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonCpf"
+            placeholder="CPF da Conta"
+            value={cpfAccount}
+            onChange={handleCpfAccount}
+            required
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonGender">
+            Gênero
+          </Label>
+          <Select value={genderAccount} onValueChange={handleGenderAccount}>
+            <SelectTrigger className="col-span-3" id="buttonGender">
+              <SelectValue placeholder="Selecione o Gênero " />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="Masculino">Masculino</SelectItem>
+              <SelectItem value="Feminino">Feminino</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonPhone">
+            Telefone
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonPhone"
+            placeholder="(51) X-XXXXXXXX"
+            pattern="\d{11}"
+            value={phoneAccount}
+            onChange={handlePhoneAccount}
+            required
+            type="tel"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonCep">
+            CEP
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonCep"
+            placeholder="00000-000"
+            value={cepAccount}
+            onChange={handleCepAccount}
+            required
+            type="text"
+          />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="buttonIdade">
+            Idade
+          </Label>
+          <Input
+            className="col-span-3"
+            id="buttonIdade"
+            placeholder="Idade da Conta"
+            value={idadeAccount}
+            onChange={handleIdadeAccount}
+            required
+            type="number"
+          />
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end">
+        <Button
+          disabled={isCreating}
+          onClick={handleCreateAccount}
+          variant="blue"
+        >
+          {isCreating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isUpdate ? "Atualizar Conta" : "Cadastrar Conta"}
+        </Button>
+      </CardFooter>
+    </>
   );
 }
