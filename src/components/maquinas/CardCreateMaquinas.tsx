@@ -44,6 +44,7 @@ import {
   import React, { useEffect, useState, ChangeEvent } from "react";
   import { Loader2, Pencil } from "lucide-react";
   import { MaquinasInterface, useMaquinas } from "./MaquinasContext";
+import { useFiliais } from "../filiais/FiliaisContext";
   
   interface MaquinaProps {
     maquina?: MaquinasInterface;
@@ -58,10 +59,11 @@ import {
   }: MaquinaProps) {
     const [nameMaquina, setNameMaquina] = useState(maquina?.nome || "");
     const [musculoMaquina, setMusculoMaquina] = useState(maquina?.musculo || "");
+    const [filialID,setFilialID] = useState(maquina?.filialId || "")
     const { updateMaquinas, updateSpecificMaquina } = useMaquinas();
     const [isCreating, setIsCreating] = useState(false);
     const { toast } = useToast();
-  
+    const {filiais} = useFiliais()
     const handleNameMaquina = (event: ChangeEvent<HTMLInputElement>) => {
       setNameMaquina(event.target.value);
     };
@@ -69,7 +71,9 @@ import {
     const handleMusculoMaquina = (event: ChangeEvent<HTMLInputElement>) => {
       setMusculoMaquina(event.target.value);
     };
-  
+    const handleFilialID = (value: string) => {
+      setFilialID(parseInt(value));
+    };
     const unMask = (value: any) => {
       return value.replace(/[^0-9]/g, "");
     };
@@ -85,6 +89,7 @@ import {
         const maquinaData = {
           nome: nameMaquina,
           musculo: musculoMaquina,
+          filialId: filialID,
           ...(isUpdate && { id: maquina?.id }),
         };
   
@@ -166,6 +171,23 @@ import {
               type="text"
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="selectInstrutor">
+           Filial
+          </Label>
+          <Select value={filialID?.toString()} onValueChange={handleFilialID}>
+            <SelectTrigger className="col-span-3" id="selectInstrutor">
+              <SelectValue placeholder="Selecione a Filial" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {filiais.map((filial) => (
+                <SelectItem key={filial.id} value={filial.id.toString()}>
+                  {filial.endereco}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         </CardContent>
         <CardFooter className="flex justify-between">
           {/* {isUpdate && (

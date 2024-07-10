@@ -31,6 +31,7 @@ import { Loader2 } from "lucide-react";
 import { AccountInterface } from "./AccountContext";
 import { host } from "@/App";
 import { useAccounts } from "./AccountContext";
+import { useFiliais } from "../filiais/FiliaisContext";
 
 interface AccountProps {
   account?: AccountInterface;
@@ -52,7 +53,9 @@ export default function CardCreateAccount({
   const [idadeAccount, setIdadeAccount] = useState(account?.idade || "");
   const [loginAccount, setLoginAccount] = useState(account?.login || "");
   const [passwordAccount, setPasswordAccount] = useState(account?.senha || "");
+  const [filialID,setFilialID] = useState(account?.filialId || "")
   const [isCreating, setIsCreating] = useState(false);
+  const {filiais} = useFiliais()
   const { toast } = useToast();
   const { updateAccount, updateSpecificAccount } = useAccounts();
 
@@ -63,7 +66,9 @@ export default function CardCreateAccount({
   const handleCpfAccount = (event: ChangeEvent<HTMLInputElement>) => {
     setCpfAccount(event.target.value);
   };
-
+  const handleFilialID = (value: string) => {
+    setFilialID(parseInt(value));
+  };
   const handleEmailAccount = (event: ChangeEvent<HTMLInputElement>) => {
     setEmailAccount(event.target.value);
   };
@@ -114,6 +119,7 @@ export default function CardCreateAccount({
         idade: idadeAccount,
         login: loginAccount,
         senha: passwordAccount,
+        filialId: filialID,
         ...(isUpdate && { id: account?.id }),
       };
 
@@ -291,6 +297,23 @@ export default function CardCreateAccount({
             required
             type="number"
           />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="selectInstrutor">
+           Filial
+          </Label>
+          <Select value={filialID?.toString()} onValueChange={handleFilialID}>
+            <SelectTrigger className="col-span-3" id="selectInstrutor">
+              <SelectValue placeholder="Selecione a Filial" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {filiais.map((filial) => (
+                <SelectItem key={filial.id} value={filial.id.toString()}>
+                  {filial.endereco}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">

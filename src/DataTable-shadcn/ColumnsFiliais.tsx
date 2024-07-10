@@ -16,6 +16,7 @@ import CardCreateAccount from "@/components/account/CardCreateAccount";
 import DeleteAccount from "@/components/account/DeleteAccount";
 import { FilialInterface } from "@/components/filiais/FiliaisContext";
 import CardCreateFilial from "@/components/filiais/CardCreateFiliais";
+import DeleteFilial from "@/components/filiais/DeleteFiliais";
 // criar contexto de clients
 export const columnsFilial: ColumnDef<FilialInterface>[] = [
   {
@@ -56,7 +57,7 @@ export const columnsFilial: ColumnDef<FilialInterface>[] = [
             </DialogContent>
           </Dialog>
           {/* DELETAR*/}
-          <DeleteAccount id={filial.id} />
+          <DeleteFilial id={filial?.id } />
         </div>
       );
     },

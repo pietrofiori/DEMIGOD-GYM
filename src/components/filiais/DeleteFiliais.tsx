@@ -16,15 +16,15 @@ import { useToast } from "@/components/ui/use-toast";
 import { host } from "@/App";
 
 interface DeleteFilialProps {
-  endereco: string;
+  id: number;
 }
 
-export default function DeleteFilial({ endereco }: DeleteFilialProps) {
+export default function DeleteFilial({ id }: DeleteFilialProps) {
   const { toast } = useToast();
 
   const handleDeleteFilial = async () => {
     try {
-      const response = await fetch(`${host}filiais/${endereco}`, {
+      const response = await fetch(`${host}filiais/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Row, Col } from "antd";
 import { useAccounts } from "@/components/account/AccountContext";
 import { useClients } from "@/components/clients/ClientsContext";
@@ -10,7 +20,23 @@ import { useAvaliacoes } from "@/components/avaliacoes/AvaliacoesContext";
 import { useFiliais } from "@/components/filiais/FiliaisContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { User, DollarSign, Calendar, Clipboard, Wrench ,CheckSquare, MapPin, Users } from "lucide-react";
+import {
+  User,
+  DollarSign,
+  Calendar,
+  Clipboard,
+  Wrench,
+  CheckSquare,
+  MapPin,
+  Users,
+} from "lucide-react";
+import CardRelatoriosMaquinas from "@/components/Relatórios/CardRelatórioMáquinas";
+import CardRelatoriosPlanos from "@/components/Relatórios/CardRelatóriosPlanos";
+import CardRelatoriosModalidades from "@/components/Relatórios/CardRelatoriosModalidades";
+import CardRelatoriosAvaliacoes from "@/components/Relatórios/CardRelatóriosAvaliacoes";
+import CardRelatoriosContas from "@/components/Relatórios/CardRelatóriosContas";
+import CardRelatoriosAlunos from "@/components/Relatórios/CardRelatóriosAlunos";
+import CardRelatoriosInstrutores from "@/components/Relatórios/CardRelatóriosInstrutores";
 
 const RelatoriosPage = () => {
   const { accounts } = useAccounts();
@@ -28,7 +54,16 @@ const RelatoriosPage = () => {
     <div className="dashboard-container m-7">
       <div className="w-full flex mb-7 items-center justify-between">
         <CardTitle>Relatórios</CardTitle>
-        <Input type="date" value={today} className="bg-card w-[300px]" />
+        <div className="flex items-center justify-center gap-5">
+          {" "}
+          Data Atual:
+          <Input
+            type="date"
+            value={today}
+            className="bg-card w-[300px]"
+            readOnly
+          />
+        </div>
       </div>
       <div className="flex flex-wrap">
         <div className="w-full md:w-1/2 pr-4">
@@ -40,10 +75,26 @@ const RelatoriosPage = () => {
                 </CardHeader>
                 <CardContent>
                   <ul>
-                    {accounts.map((account) => (
-                      <li key={account.id} className="flex items-center">
-                        <DollarSign className="mr-2" /> {account.nome}
-                      </li>
+                    {accounts.map((contas) => (
+                      <div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex items-center justify-between py-2 cursor-pointer">
+                              <li className="flex items-center gap-2">
+                                <CheckSquare className="mr-2" />
+                                {contas.nome}
+                              </li>
+                              <button className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                                Ver detalhes
+                              </button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <CardRelatoriosContas conta={contas} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ))}
                   </ul>
                 </CardContent>
@@ -57,9 +108,25 @@ const RelatoriosPage = () => {
                 <CardContent>
                   <ul>
                     {instrutores.map((instrutor) => (
-                      <li key={instrutor.id} className="flex items-center">
-                        <Users className="mr-2" /> {instrutor.nome}
-                      </li>
+                      <div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex items-center justify-between py-2 cursor-pointer">
+                              <li className="flex items-center gap-2">
+                                <CheckSquare className="mr-2" />
+                                {instrutor.nome}
+                              </li>
+                              <button className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                                Ver detalhes
+                              </button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <CardRelatoriosInstrutores instrutor={instrutor} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ))}
                   </ul>
                 </CardContent>
@@ -73,9 +140,25 @@ const RelatoriosPage = () => {
                 <CardContent>
                   <ul>
                     {planos.map((plano) => (
-                      <li key={plano.id} className="flex items-center">
-                        <Clipboard className="mr-2" /> {plano.nome}
-                      </li>
+                      <div key={plano.id}>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex items-center justify-between py-2 cursor-pointer">
+                              <li className="flex items-center gap-2">
+                                <Clipboard className="mr-2" />
+                                {plano.nome}
+                              </li>
+                              <button className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                                Ver detalhes
+                              </button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <CardRelatoriosPlanos plano={plano} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ))}
                   </ul>
                 </CardContent>
@@ -89,9 +172,27 @@ const RelatoriosPage = () => {
                 <CardContent>
                   <ul>
                     {modalidades.map((modalidade) => (
-                      <li key={modalidade.id} className="flex items-center">
-                        <Calendar className="mr-2" /> {modalidade.nome}
-                      </li>
+                      <div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex items-center justify-between py-2 cursor-pointer">
+                              <li className="flex items-center gap-2">
+                                <Calendar className="mr-2" />
+                                {modalidade.nome}
+                              </li>
+                              <button className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                                Ver detalhes
+                              </button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <CardRelatoriosModalidades
+                              modalidade={modalidade}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ))}
                   </ul>
                 </CardContent>
@@ -105,9 +206,25 @@ const RelatoriosPage = () => {
                 <CardContent>
                   <ul>
                     {maquinas.map((maquina) => (
-                      <li key={maquina.id} className="flex items-center">
-                        <Wrench className="mr-2" /> {maquina.nome}
-                      </li>
+                      <div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex items-center justify-between py-2 cursor-pointer">
+                              <li className="flex items-center gap-2">
+                                <Clipboard className="mr-2" />
+                                {maquina.nome}
+                              </li>
+                              <button className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                                Ver detalhes
+                              </button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <CardRelatoriosMaquinas maquina={maquina} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ))}
                   </ul>
                 </CardContent>
@@ -121,9 +238,25 @@ const RelatoriosPage = () => {
                 <CardContent>
                   <ul>
                     {avaliacoes.map((avaliacao) => (
-                      <li key={avaliacao.id} className="flex items-center">
-                        <CheckSquare className="mr-2" /> {avaliacao.nomeSala}
-                      </li>
+                      <div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex items-center justify-between py-2 cursor-pointer">
+                              <li className="flex items-center gap-2">
+                                <CheckSquare className="mr-2" />
+                                {avaliacao.nomeSala}
+                              </li>
+                              <button className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                                Ver detalhes
+                              </button>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <CardRelatoriosAvaliacoes avaliacao={avaliacao} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     ))}
                   </ul>
                 </CardContent>
@@ -155,9 +288,25 @@ const RelatoriosPage = () => {
             <CardContent>
               <ul>
                 {clients.map((client) => (
-                  <li key={client.id} className="flex items-center">
-                    <User className="mr-2" /> {client.nome}
-                  </li>
+                  <div>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <div className="flex items-center justify-between py-2 cursor-pointer">
+                          <li className="flex items-center gap-2">
+                            <CheckSquare className="mr-2" />
+                            {client.nome}
+                          </li>
+                          <button className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-black rounded-full mr-2"></span>
+                            Ver detalhes
+                          </button>
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <CardRelatoriosAlunos aluno={client} />
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 ))}
               </ul>
             </CardContent>

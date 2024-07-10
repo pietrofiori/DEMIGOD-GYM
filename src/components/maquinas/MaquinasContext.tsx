@@ -4,6 +4,7 @@ export interface MaquinasInterface {
   id: number;
   nome: string;
   musculo: string;
+  filialId?: number;
 }
 
 interface MaquinasInterfaceType {

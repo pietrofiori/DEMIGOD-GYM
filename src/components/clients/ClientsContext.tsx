@@ -10,6 +10,7 @@ export interface ClientsInterface {
   telefone: string;
   cep: string; // o ? significa que o valor nao precisa ser presente , se for nulo nao tem problema
   idade: number;
+  planoId?: number;
 
 }
 

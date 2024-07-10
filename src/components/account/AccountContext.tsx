@@ -11,6 +11,7 @@ export interface AccountInterface {
   telefone: string;
   cep: string; 
   idade: number;
+  filialId: number;
 }
 
 interface AccountContextType {

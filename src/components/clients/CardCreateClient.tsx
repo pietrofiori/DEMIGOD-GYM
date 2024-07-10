@@ -46,6 +46,7 @@ import { Loader2, Pencil } from "lucide-react";
 import { ClientsInterface } from "./ClientsContext";
 import { host } from "@/App";
 import { useClients } from "./ClientsContext";
+import { usePlanos } from "../planos/PlanosContext";
 interface ClientProps {
   client?: ClientsInterface;
   isUpdate?: boolean;
@@ -64,9 +65,15 @@ export default function CardCreateClient({
   const [phoneClient, setPhoneClient] = useState(client?.telefone || "");
   const [cepClient, setCepClient] = useState(client?.cep || "");
   const [idadeClient, setIdadeClient] = useState(client?.idade || "");
+  const [planoId, setPlanoID] = useState(client?.planoId || "");
   const [isCreating, setIsCreating] = useState(false);
+  const { planos } = usePlanos();
   const { toast } = useToast();
   const { updateClients, updateSpecificClient } = useClients();
+
+  const handlePlanoID = (value: string) => {
+    setPlanoID(parseInt(value));
+  };
 
   const handleNameClient = (event: ChangeEvent<HTMLInputElement>) => {
     setNameClient(event.target.value);
@@ -113,6 +120,8 @@ export default function CardCreateClient({
         telefone: unMask(phoneClient),
         cep: cepClient,
         idade: idadeClient,
+        planoId: planoId,
+        // planoId
         ...(isUpdate && { id: client?.id }),
       };
 
@@ -136,11 +145,11 @@ export default function CardCreateClient({
       if (isUpdate) {
         updateSpecificClient(clientData as any);
       } else {
-        updateClients(data.cliente);
+        updateClients(data);
       }
 
       toast({
-        description: !isUpdate ? data.mensagem : "Aluno Atualizado com Sucesso",
+        description: !isUpdate ? "Aluno Cadastrado com Sucesso" : "Aluno Atualizado com Sucesso",
       });
 
       onSuccess?.();
@@ -264,6 +273,23 @@ export default function CardCreateClient({
             required
             type="text"
           />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="selectInstrutor">
+            Plano do Aluno
+          </Label>
+          <Select value={planoId?.toString()} onValueChange={handlePlanoID}>
+            <SelectTrigger className="col-span-3" id="selectInstrutor">
+              <SelectValue placeholder="Selecione o Plano" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {planos.map((plano) => (
+                <SelectItem key={plano.id} value={plano.id.toString()}>
+                  {plano.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">

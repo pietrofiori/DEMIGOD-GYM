@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePlanos } from "@/components/planos/PlanosContext";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,7 +42,8 @@ export function DataTable<TData, TValue>({
     []
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false); 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { planos } = usePlanos();
 
   const table = useReactTable({
     data,
@@ -68,9 +70,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between p-4">
         <Input
           placeholder="Filtro pelo Nome..."
-          value={
-            (table.getColumn("nome")?.getFilterValue() as string) || ""
-          }
+          value={(table.getColumn("nome")?.getFilterValue() as string) || ""}
           onChange={(event) =>
             table.getColumn("nome")?.setFilterValue(event.target.value)
           }
@@ -85,8 +85,11 @@ export function DataTable<TData, TValue>({
             </DialogTrigger>
             <div>
               <DialogContent>
-                <CardCreateClient
-                 onSuccess={() => setIsDialogOpen(false)} />
+                {planos && planos.length > 0 ? (
+                  <CardCreateClient onSuccess={() => setIsDialogOpen(false)} />
+                ) : (
+                  <p>Você precisa cadastrar pelo menos 1 plano.</p>
+                )}
               </DialogContent>
             </div>
           </Dialog>

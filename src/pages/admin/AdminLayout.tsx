@@ -55,7 +55,7 @@ function AdminLayout() {
     };
 
     fetchAllInfo();
-  }, [location, setInstrutores, setClients, setPlanos, setModalidades,setMaquinas, setAccounts,setAvaliacoes,setFiliais]);
+  }, [location, setInstrutores, setClients, setPlanos, setModalidades,setMaquinas, setAccounts,setAvaliacoes, setFiliais]);
 
   return (
     <div>

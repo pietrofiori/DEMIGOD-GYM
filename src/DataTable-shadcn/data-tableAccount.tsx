@@ -78,15 +78,15 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} >
             <DialogTrigger asChild>
               <div>
                 <Button variant="blue">Criar Conta</Button>
               </div>
             </DialogTrigger>
             <div>
-              <DialogContent>
-                <CardCreateAccount
+              <DialogContent className="max-w-6xl">
+                <CardCreateAccount 
                  onSuccess={() => setIsDialogOpen(false)} />
               </DialogContent>
             </div>

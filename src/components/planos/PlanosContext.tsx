@@ -5,6 +5,7 @@ export interface PlanosInterface {
   id: number;
   nome: string;
   preco: number;
+  filialId?: number;
 
 }
 

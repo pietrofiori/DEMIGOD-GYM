@@ -138,12 +138,12 @@ export default function CardCreateInstrutor({
       if (isUpdate) {
         updateSpecificInstrutor(instrutorData as any);
       } else {
-        updateInstrutores(data.instrutor);
+        updateInstrutores(data);
       }
 
       toast({
         description: !isUpdate
-          ? data.mensagem
+          ? "Instrutor Cadastrado com Sucesso"
           : "Instrutor Atualizado com Sucesso",
       });
 

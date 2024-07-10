@@ -195,7 +195,7 @@ export default function CardCreateAvaliacao({
             id="inputHorario"
             type="datetime-local"
             placeholder="Horário"
-            value={horario ? horario.toISOString().substring(0, 16) : ""}
+            value={!isUpdate ? horario ? horario.toISOString().substring(0, 16) : "" : horario as any}
             onChange={handleHorario}
             required
           />

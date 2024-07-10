@@ -45,6 +45,7 @@ import {
   import React, { useEffect, useState, ChangeEvent } from "react";
   import { Loader2, Pencil } from "lucide-react";
  import { PlanosInterface, usePlanos } from "./PlanosContext";
+import { useFiliais } from "../filiais/FiliaisContext";
   interface PlanosProps {
     plano?: PlanosInterface;
     isUpdate?: boolean;
@@ -58,9 +59,11 @@ import {
   }: PlanosProps) {
     const [namePlano, setNamePlano] = useState(plano?.nome || "");
     const [precoPlano, setPrecoPlano] = useState(plano?.preco || "");
+    const [filialID,setFilialID] = useState(plano?.filialId || "")
     const {updatePlanos, updateSpecificPlano} = usePlanos()
     const [isCreating, setIsCreating] = useState(false);
     const { toast } = useToast();
+    const {filiais} = useFiliais()
   
     const handleNamePlano = (event: ChangeEvent<HTMLInputElement>) => {
       setNamePlano(event.target.value);
@@ -69,7 +72,10 @@ import {
     const handlePrecoPlano = (event: ChangeEvent<HTMLInputElement>) => {
       setPrecoPlano(event.target.value);
     };
-   
+    const handleFilialID = (value: string) => {
+      setFilialID(parseInt(value));
+    };
+
     const unMask = (value: any) => {
       return value.replace(/[^0-9]/g, "");
     };
@@ -85,6 +91,7 @@ import {
         const planoData = {
           nome: namePlano,
           preco: precoPlano,
+          filialId: filialID,
           ...(isUpdate && { id: plano?.id }),
         };
     
@@ -167,6 +174,23 @@ import {
               type="number"
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="selectInstrutor">
+           Filial
+          </Label>
+          <Select value={filialID?.toString()} onValueChange={handleFilialID}>
+            <SelectTrigger className="col-span-3" id="selectInstrutor">
+              <SelectValue placeholder="Selecione a Filial" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {filiais.map((filial) => (
+                <SelectItem key={filial.id} value={filial.id.toString()}>
+                  {filial.endereco}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         </CardContent>
         <CardFooter className="flex justify-between">
           {/* {isUpdate && (

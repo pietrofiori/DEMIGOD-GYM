@@ -5,6 +5,7 @@ export interface ModalidadesInterface {
   id: number;
   nome: string;
   preco: string;
+  instrutorId: number;
 
 }
 

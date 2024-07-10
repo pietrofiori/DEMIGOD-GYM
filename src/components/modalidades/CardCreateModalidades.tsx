@@ -44,6 +44,7 @@ import { useToast } from "@/components/ui/use-toast";
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { Loader2, Pencil } from "lucide-react";
 import { ModalidadesInterface, useModalidades } from "./ModalidadesContext";
+import { useInstrutores } from "../instrutores/InstrutoresContext";
 interface ModalidadeProps {
   modalidade?: ModalidadesInterface;
   isUpdate?: boolean;
@@ -59,9 +60,15 @@ export default function CardCreateModalidades({
   const [precoModalidade, setPrecoModalidade] = useState(
     modalidade?.preco || ""
   );
+  const [instrutorID,setInstrutorID] = useState(modalidade?.instrutorId || "")
   const { updateModalidades, updateSpecificModalidade } = useModalidades();
   const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
+  const {instrutores} = useInstrutores()
+
+  const handleInstrutorID = (value: string) => {
+    setInstrutorID(parseInt(value));
+  };
 
   const handleNameModalidade = (event: ChangeEvent<HTMLInputElement>) => {
     setNameModalidade(event.target.value);
@@ -86,6 +93,7 @@ export default function CardCreateModalidades({
       const modalidadeData = {
         nome: nameModalidade,
         preco: precoModalidade,
+        instrutorId: instrutorID,
         ...(isUpdate && { id: modalidade?.id }),
       };
 
@@ -166,6 +174,23 @@ export default function CardCreateModalidades({
             required
             type="number"
           />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-end" htmlFor="selectInstrutor">
+           Instrutor Responsável
+          </Label>
+          <Select value={instrutorID?.toString()} onValueChange={handleInstrutorID}>
+            <SelectTrigger className="col-span-3" id="selectInstrutor">
+              <SelectValue placeholder="Selecione o instrutor" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {instrutores.map((instrutor) => (
+                <SelectItem key={instrutor.id} value={instrutor.id.toString()}>
+                  {instrutor.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">

@@ -35,28 +35,6 @@ export const columnsAccount: ColumnDef<AccountInterface>[] = [
     },
   },
   {
-    accessorKey: "CPF",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          CPF {/*Ajustar text*/}
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    id: "login",
-    header: "Login",
-  },
-  {
-    id: "senha",
-    header: "Senha",
-  },
-  {
     id: "accounts",
     header: "Opções",
     cell: ({ row }) => {
