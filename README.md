@@ -17,4 +17,4 @@ Execução
 Para executar o projeto, siga este passo:
 
 No terminal, dentro do diretório do projeto, execute npm run dev.
-Isso iniciará o servidor de desenvolvimento. Abra seu navegador e vá para http://localhost:5173 para visualizar o projeto em execução.
+Isso iniciará o servidor de desenvolvimento. Abra seu navegador e vá para http://localhost:5173/admin para visualizar o projeto em execução.
